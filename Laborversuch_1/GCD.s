@@ -22,36 +22,68 @@ init
 								; -> damit auch 2.2 (LED) val = 0
 			LDR R4, =FIO2PIN1   ; 1 -> alle Werte in Port 2.8 - 2.15 sind high
 								; -> damit auch 2.10 (Taster) val = 1
+								
+main	; LABOR_1.1
 
-main 
-			LDR R6, [R4]        ; Wert aus R4 in R6 speichern
+			LDR R6, [R4]		; Wert aus R4 in R6 speichern
+			LDR R7, [R3]		; Werte LED auf R7
+			SUB R7, R7, R7		; alles gleich 0 -> LED aus
+			STR R7, [R3]		; wieder in R3 laden
+
 			TST R6, #0x04       ; 0000 0100 -> Pin 10 (Taster)
 								; -> Testen ob Taster gedrückt wurde
-			BNE main            ; Branch if not equal (Taster nicht gedrückt)
-			LDR R0, =2500000    ; 2.500.000ms delay -> "Software-Prellen"
+			BNE main			; Branch if not equal (Taster nicht gedrückt)
+			LDR R0, =1000		;
 			BL delay
 			
-set			
-			LDR R6, [R4]		; Taster abrufen
+set			LDR R6, [R4]		; Taster abrufen
 			TST R6, #0x04		; Taster noch gedrückt?
-			BNE main			; Gedrückt: läuft weiter, ungedrückt zurück in main
+			BNE main			; nicht gedrückt -> zurück zu main
+			LDR R7, [R3]		; Werte LED auf R7
+			AND R7, R7, #0x04	; LED an
+			STR R7, [R3]		; R7-val in R3
 			
-ng								; wieder loslassen
-			LDR R6, [R4]
-			TST R6, #0x04		; Taster noch gedrückt?
-			BEQ ng				; Noch gedrückt 
-			LDR R7, [R3]		; R3 (Werte der LED) auf R7
-			EOR R7, R7, #0xF8	; R7 EXOR 1111 1000 -> 
-								; EXOR: (0, 0):0, (0, 1):1, (1, 0):1, (1, 1):0
-								; -> 2.0 - 2.2 auf 1 -> LED an 
-			STR R7, [R3]		; geänderte Werte wieder in den Val von LED
-			B main
-
-delay       
-			SUBS R0, R0, #1		; R0-- -> Delay herunterzählen
+			
+delay
+			SUBS R0, R0, #1		; R0--
 			BNE delay
 			B set
 			
+			
+			END
 
-			END	
+;main 	; LABOR_1.2
+
+;			LDR R6, [R4]        ; Wert aus R4 in R6 speichern
+;			TST R6, #0x04       ; 0000 0100 -> Pin 10 (Taster)
+;								; -> Testen ob Taster gedrückt wurde
+;			BNE main            ; Branch if not equal (Taster nicht gedrückt)
+;			LDR R0, =2500000    ; 2.500.000 delay -> "Software-Prellen"
+;			BL delay
+;			
+;set			
+;			LDR R6, [R4]		; Taster abrufen
+;			TST R6, #0x04		; Taster noch gedrückt?
+;			BNE main			; Gedrückt: läuft weiter, ungedrückt zurück in main
+;			
+;ng								; wieder loslassen
+;			LDR R6, [R4]
+;			TST R6, #0x04		; Taster noch gedrückt?
+;			BEQ ng				; Noch gedrückt 
+;			LDR R7, [R3]		; R3 (Werte der LED) auf R7
+;			EOR R7, R7, #0xFF	; R7 EXOR 1111 1000 -> 
+;								; EXOR: (0, 0):0, (0, 1):1, (1, 0):1, (1, 1):0
+;								; -> 2.0 - 2.2 auf 1 -> LED an 
+;			STR R7, [R3]		; geänderte Werte wieder in den Val von LED
+; 			B main
+
+;delay       
+;			SUBS R0, R0, #1		; R0-- -> Delay herunterzählen
+;			BNE delay
+;			B set
+;			
+
+;			END	
+
+			
 		
