@@ -1,0 +1,12 @@
+--cpu Cortex-M3
+".\objects\asciilib.o"
+".\objects\funk.o"
+".\objects\glcd.o"
+".\objects\main.o"
+".\objects\touch.o"
+".\objects\startup_lpc17xx.o"
+".\objects\system_lpc17xx.o"
+--strict --scatter ".\Objects\Lab1_3.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\Lab1_3.map" -o .\Objects\Lab1_3.axf
