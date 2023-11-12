@@ -26,6 +26,7 @@ init
 main	; LABOR_1.1
 
 			LDR R6, [R4]		; Wert aus R4 in R6 speichern
+			
 			LDR R7, [R3]		; Werte LED auf R7
 			SUB R7, R7, R7		; alles gleich 0 -> LED aus
 			STR R7, [R3]		; wieder in R3 laden
@@ -33,16 +34,18 @@ main	; LABOR_1.1
 			TST R6, #0x04       ; 0000 0100 -> Pin 10 (Taster)
 								; -> Testen ob Taster gedrückt wurde
 			BNE main			; Branch if not equal (Taster nicht gedrückt)
-			LDR R0, =1000		;
-			BL delay
+			LDR R0, =10		; delay Wert festlegen
+			B delay
 			
 set			LDR R6, [R4]		; Taster abrufen
 			TST R6, #0x04		; Taster noch gedrückt?
 			BNE main			; nicht gedrückt -> zurück zu main
+			
 			LDR R7, [R3]		; Werte LED auf R7
-			AND R7, R7, #0x04	; LED an
+			ORR R7, R7, #0x04	; LED an -> aus Gründen wieder 0x00
 			STR R7, [R3]		; R7-val in R3
 			
+			B main
 			
 delay
 			SUBS R0, R0, #1		; R0--
