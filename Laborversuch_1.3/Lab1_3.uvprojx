@@ -384,19 +384,9 @@
           <GroupName>Source Group 1</GroupName>
           <Files>
             <File>
-              <FileName>LPC1768.inc</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\LPC1768.inc</FilePath>
-            </File>
-            <File>
               <FileName>AsciiLib.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\AsciiLib.c</FilePath>
-            </File>
-            <File>
-              <FileName>AsciiLib.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\AsciiLib.h</FilePath>
             </File>
             <File>
               <FileName>funk.c</FileName>
@@ -404,19 +394,9 @@
               <FilePath>.\funk.c</FilePath>
             </File>
             <File>
-              <FileName>funk.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\funk.h</FilePath>
-            </File>
-            <File>
               <FileName>GLCD.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\GLCD.c</FilePath>
-            </File>
-            <File>
-              <FileName>GLCD.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\GLCD.h</FilePath>
             </File>
             <File>
               <FileName>main.c</FileName>
@@ -427,11 +407,6 @@
               <FileName>touch.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\touch.c</FilePath>
-            </File>
-            <File>
-              <FileName>touch.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\touch.h</FilePath>
             </File>
           </Files>
         </Group>

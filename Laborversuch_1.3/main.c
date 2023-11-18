@@ -1,145 +1,172 @@
 #include <LPC17xx.h>
+#include <stdbool.h>
 
-int zustand = 0;
-int richtung = 0;
-// int extint_triggered = 0;
-int timer1_triggered = 0;
-int exint_tigerred = 0;
-int led_go = 0;
-int prelled = 0;
+bool zustand = false;
+bool richtung = false;													// f= links, t= rechts 
+bool timer1_triggered = false;
+bool taster_pressed = false;
+bool led_go = false;
+bool prelled = false;
 
-void init(void);
+void Init(void);
 void TIMER2_IRQHandler(void);
 void TIMER1_IRQHandlers(void);
 void EINT0_IRQHandler(void);
 
+// HABE ZUSTANDVARIABLEN VON INT ZU BOOL GEÄNDERT
+
 int main(void){
 	
-	init(); //als erstes initialisieren aufrufen;
-
-	while(1){//endlosschleife
-		if(exint_tigerred){
-			if(timer1_triggered && (zustand==0)){						//Taster drücken && Licht aus 
-				zustand = 1;
-				timer1_triggered =0;
-				LPC_GPIO2->FIOPIN = LPC_GPIO2->FIOPIN & 0xFF00;			//1111 1111 0000 0000 -> Pin 11 - 19 aktiv 
-				LPC_GPIO2->FIOPIN = LPC_GPIO2->FIOPIN | 0x0001;			//0000 0000 0000 0001 -> Pin 0 aktiv 
-			}
-			else if(timer1_triggered && (zustand == 1)){				//Taster drücken && Licht an 
-				zustand = 0; 
-				timer1_triggered = 0;
-				LPC_GPIO2->FIOPIN = LPC_GPIO2->FIOPIN & 0xFF00; 		// alle LEDs aus
-			}
-			else if(!timer1_triggered && (zustand == 1) && !prelled){	// Taster nicht && Licht läuft weiter && nicht prelled 
-			if(richtung == 0){
-			richtung = 1;
-			}
-			else 
-				richtung = 0;
-			}
-		}
-		exint_tigerred =0;
-	} //end of while(1)
+	Init();
+	
+	while(true){																	// Endlos-Loop
+		if(taster_pressed){													// Taster gedrückt? -> EINT0 Interrupt
+			if(timer1_triggered && ! zustand){				// Timer 1 interrupt and LED aus?
+				zustand = true;													// -> LED an
+				timer1_triggered = false;								// -> var-reset timer1_triggered
+																								// Pin clear:
+																								// 1111 1111 0000 0000 -> Pin 11 - 19
+				LPC_GPIO2->FIOPIN = LPC_GPIO2->FIOPIN & 0xFF00;
+																								// Pin0 activate:
+																								// 0000 0000 0000 0001 -> Pin 0 aktiv 
+				LPC_GPIO2->FIOPIN = LPC_GPIO2->FIOPIN | 0x0001;
+			} // end of if(timer1_triggered && ! zustand)
+			
+			else if(timer1_triggered && zustand){			// Timer 1 interrupt and LED an?
+				zustand = false;												// -> LED aus
+				timer1_triggered = false;								// -> var-reset timer1_triggered
+																								// Pin clear: -> aus
+																								// 1111 1111 0000 0000 -> Pin 11 - 19
+				LPC_GPIO2->FIOPIN = LPC_GPIO2->FIOPIN & 0xFF00;
+			} // end of if(timer1_triggered && zustand)
+			
+			else if (! timer1_triggered && zustand && ! prelled){	
+																								// Kein Timer 1 Interrupt and LED an?
+																								// -> Richtungswechsel
+				if(! richtung){												 
+					richtung = true;											// nach rechts
+				}
+				else{
+					richtung = false;											// nach links
+				}
+			} // end of if (! timer1_triggered && zustand)			
+		} // end of if(taster pressed)
 		
-	if((zustand == 1) && (richtung == 0)){								//Licht an, Richtung aus 
-	LPC_TIM2->TCR |= 0x1;												//Timer Control Register -> Timer2 config? Bit 0 = 1
-																		// -> 01 Counter Mode: TC is incremented on rising edges on the CAP input selected by bits 3:2.
-	
-	while(!(led_go)){													//wenn LED aus ( nicht led_go) -> Timer2 starten 
-	continue; 															// TIMer 2 starten
-	}
-	if(LPC_GPIO2->FIOPIN & 0x80){										// 1000 0000 -> Bit 7 = 1 - logisches und (AND) 
-																		// 7. LED an
-		LPC_GPIO2->FIOPIN = LPC_GPIO2->FIOPIN & 0xFF00; 				// alle LEDS aus und andere Werte beibehalten
-		LPC_GPIO2->FIOPIN = LPC_GPIO0->FIOPIN | 0x0001; 				// 0. LED an
-		led_go = 0;														// While Abbruch 
-	}
-	else{
-	volatile int temp_fiopin = LPC_GPIO2->FIOPIN & 0x00FF;				// 0000 0000 1111 1111 (wenn Bit 0-7 = 1, dann weiterhin 1)
-																		// volatile := bei jedem Aufruf Wert kontrolliert
-		LPC_GPIO0->FIOPIN = temp_fiopin <<1;							// Wert in GPIO0 gespeichert, Wert aus temp_fiopin um 1 nach links 
-		led_go=0;
-	}
-}
-	else if((zustand ==1) && (richtung == 1)){							// taster gedrückt und richtung 1 (1 sollte nach links sein) 
-	LPC_TIM2->TCR |= 0x1; 												//TIM2 starten								
-		while(!led_go){
-		continue;
-		}
-	
-		if(LPC_GPIO0->FIOPIN & 0x1){									// 0001 -> Bit 0 an ist 
-																		//1. led an
-			LPC_GPIO2->FIOPIN = LPC_GPIO2->FIOPIN & 0xFF00;
-																		// alle LEDs aus und andere Werte beibehalen 
-			LPC_GPIO2->FIOPIN = LPC_GPIO2->FIOPIN | 0x0080;
-																		//7. led an
-			led_go = 0;
-	}
-		else{
-		volatile int temp_fiopin = LPC_GPIO2->FIOPIN & 0x00FF;
-			LPC_GPIO2->FIOPIN = temp_fiopin >> 1;						// Wert in GPIO0 gespeichert, Wert aus temp_fiopin um 1 nach rechts 	
-			led_go = 0;
-		}
-	}
-}
-	
+		taster_pressed = false;											// reset var
+		
+																								// LED-Wechsel:
+		if (zustand && ! richtung){									// LED an und nach links?
+			LPC_TIM2->TCR |= 0x01;										// Timer 2 starten -> LED Lauf
+			while(! led_go) {continue;}								// solange kein timer2 Interrupt (0.125 ms nicht abgelaufen) 
+																								// geht zu while 1 bis Timer2 abgelaufen 			
+			if(LPC_GPIO2->FIOPIN & 0x80){							// 2.8 = 1? -> letzte LED an?
+				LPC_GPIO2->FIOPIN &= 0xFF00;						// 2.8 auf 0 (2.7- 2.0 zur Sicherheit auch)
+				LPC_GPIO2->FIOPIN |= 0x01;							// 2.0 = 1 -> erste LED an
+				led_go = false;													// var-reset
+			} // end of if(LPC_GPIO2->FIOPIN & 0x80)
+			else {																		// Durchlauf von 2.0 bis 2.8
+				int tmpLED = LPC_GPIO2->FIOPIN & 0xFF;	// Speichern welche LED gerade leuchtet
+				LPC_GPIO2->FIOPIN = tmpLED << 1;				// LED += 1 -> nächste
+				led_go = false;													// var-reset
+			} // end of else
+		} // end of if (zustand && ! richtung)
+		
+		else if(zustand && richtung){								// LED an und nach rechts?
+			LPC_TIM2->TCR |= 0x01;										// Timer 2 starten -> LED Lauf
+			while(! led_go){continue;}								// solange kein timer2 Interrupt (0.125 ms nicht abgelaufen) 
+																								// geht zu while 1 bis Timer2 abgelaufen 
+			if(LPC_GPIO2->FIOPIN & 0x01){							// 2.0 = 1? -> erste LED an?
+				LPC_GPIO2->FIOPIN &= 0xFF00;						// 2.0 auf 0
+				LPC_GPIO2->FIOPIN = 0x80;								// 2.8 = 1 -> letzte LED an
+				led_go = false;													// var-reset
+			}
+			else{																			// Durchlauf 2.8 bis 2.0
+				int tmpLED = LPC_GPIO2->FIOPIN & 0xFF;	// Speichern welche LED gerade leuchtet
+				LPC_GPIO2->FIOPIN = tmpLED >> 1;				// LED -= 1 -> nächste
+				led_go = false;													// var-reset
+			} // end of else
+		} // end of if(zustand && richtung)
+				
+	} //end of endlos-loop
 
+} //end of main
 
+// -----------------------------------------------------------------------------------	
 
+void Init(void){
+	SystemInit();										//init von System
 	
-	
-void init(void){ 						// Initialisieren
+	LPC_SC->PCONP |= (22 << 1);   	// Timer 2 via PCON anschalten - Bit 22
+																	// PCONP -> Peripheral Power Register, User man S.65
+																	// -> Bit 22 einschalten 	LPC_SC_TypeDef->PCONP |= (22<<1) -> Timer2
+																	// Timer1 ist default auf 1
+																	// GPIO -> 1 out, 0 in 
 	LPC_GPIO2->FIODIR = 0xFF; 			// P2.0 bis 2.8 als Ausgang
 	LPC_GPIO2->FIOPIN = 0x00; 			// LED ausschalten
-	LPC_TIM1->MCR |= (7<<0); 			// Interrupt T1 wenn Wert erreicht & stoppen und zuruecksetzen auf MR0 Wert,	
-										// 7 bits auf 0 setzen und 0 nach links shiften
-	LPC_TIM2->PR = (25-1); 				// Prescale Register, Timer 2
-	LPC_TIM2->MR0 = (12500-1); 			// LED timer 0.125s, hochzaehlen bis 7 dann 0
-	NVIC_EnableIRQ(TIMER1_IRQn); 		// Interrrupt Timer 1 aktiv
-	NVIC_SetPriority(TIMER1_IRQn,1); 	// Priorität Interrupt Timer 1
-	NVIC_EnableIRQ(TIMER2_IRQn); 		// Interrupt Timer2 
-	NVIC_SetPriority(TIMER2_IRQn,1); 	// Interrupt Priorität
-	LPC_SC->EXTMODE |= (1<<0); 			// Edge sensitive mode on EINT0
-	LPC_SC->EXTPOLAR &= ~(1<<0); 		// falling edge sensitive
-	LPC_PINCON->PINSEL4 &= ~(3<<20); 
-	LPC_PINCON->PINSEL4 |= (1<<20);
+																	// Timer 1 -> für LEDs
+	LPC_TIM1->MCR |= (7 << 0);			// MCR einschalten Timer 1: if val tmr == max_val -> reset
+																	// Timer 2 -> Prellung
+	LPC_TIM2->PR = (25-1); 					// Prescale Register, Timer 2 -> max-val
+	LPC_TIM2->MR0 = (12500-1); 			// LED timer 0.125s, hochzaehlen bis 7 dann 0 (Interrupt wenn val erreicht)
+																	// Interrupt Handling (Skript 5-58) 
+	NVIC_EnableIRQ(TIMER1_IRQn);		// Interrupt Timer 1 aktivieren 
+	NVIC_SetPriority(TIMER1_IRQn,1);// Priorität Interrupt Timer 1 = 1
+																	// user man S.777 interrupt -> enable, priority
+	NVIC_EnableIRQ(TIMER2_IRQn); 		// Interrupt Timer 2 aktivieren
+	NVIC_SetPriority(TIMER2_IRQn,1);// Priorität Interrupt Timer 2 = 1
+	
+	LPC_SC->EXTMODE |= (1<<0); 			// Edge sensitive mode (Flanken) on EINT0 ->  EINT0 verbunden mit P2.10
+	LPC_SC->EXTPOLAR &= ~(1<<0); 		// auf fallende Flanke
+																	// PINSEL-Reg user_manual S.114 Übersicht welcher Port in welchem PINSEL-Reg
+	LPC_PINCON->PINSEL4 &= ~(3<<20);// val reset in Bit 21:20 and 0b11 -> P2.10 (Taster)
+	LPC_PINCON->PINSEL4 |= (1<<20);	// set GPIO Port 2.10 (20) auf 1
+	
 	NVIC_EnableIRQ(EINT0_IRQn);			// Nested vectored interrupt controller
-	NVIC_SetPriority(EINT0_IRQn,2); 	// Prio setzen
+	NVIC_SetPriority(EINT0_IRQn,2); // Prio setzen
 	return;
-}
-void TIMER2_IRQHandler(void){
-	//Flag clearen vom Interrupt
-	LPC_TIM2->IR = 1;
+}	//end of Init
+
+
+void TIMER2_IRQHandler(void){			// Skript 5-109 && 5-169
+	LPC_TIM2->IR = 1;								// 1:  Interrupt-flag clear
 	led_go = 1;
 	return;
 }
+
 void TIMER1_IRQHandlers(void){
-	LPC_TIM1->IR = 1; //Flag clearen
-	timer1_triggered = 1; // name verändern
+	LPC_TIM1->IR = 1; 							// 1:  Interrupt-flag clear
+	timer1_triggered = 1; 					// name verändern
 	return;
 }
+
+
 void EINT0_IRQHandler(void){
-	if((LPC_SC->EXTPOLAR & 0x1) ==0 ){
-		//wenn fallende Flanke da extpolare
-	 prelled = 0; // umbenennen
-		LPC_TIM1->TCR |= 0x2; // timer 1 reset 0x2??
-		LPC_TIM1->TCR &= ~(1<<1); //1 um 1 nach links shift, tcr?
-		LPC_TIM1->TCR |= 0x1; // Timer 1 starten
+	if((LPC_SC->EXTPOLAR & 0x1) == 0 ){ 
+																	// (Bit0: 1 wenn 1) ist es 0? 0 = fallende Flanke
+																	// The External Interrupt Polarity Register controls
+																	// which level or edge on each pin will cause an interrupt
+																	// wenn fallende Flanke da extpolare
+		prelled = false; 							// 
+		LPC_TIM1->TCR |= 0x2; 				// timer 1 reset 0x2 = 0b10 -> Notiz im Skript: 2 Reg
+		LPC_TIM1->TCR &= ~(1<<1); 		// 1 um 1 nach links shift, clear
+																	// TCR = Timer Control Reg - Counter 0: enable, 1: reset
+		LPC_TIM1->TCR |= 0x1;					// Timer 1 starten 0x1 = 0b01 
 	}
-	else{
-		if(LPC_TIM1->TC <= 1000){
-			//taste kuerzer als 10ms 
-			prelled = 1;
+	else{														// steigende Flanke
+		if(LPC_TIM1->TC <= 1000){			// Taste kürzer als 10ms gedrückt
+			prelled = true;
 		}
-		else{
-			prelled = 0;
+		else{													// Taste länger als 10ms gedrückt
+			prelled = false;
 		}
-		LPC_TIM1->TCR &= ~(0x1); // TImer stoppen
-		LPC_TIM1->TCR |= 0x2; // TIMER reset
-		LPC_TIM1->TCR &= ~(1<<2);
-		exint_tigerred = 1;
+		// zu steigende Flanke Routine
+		LPC_TIM1->TCR &= ~(0x1); 			// Timer 1 stoppen
+		LPC_TIM1->TCR |= 0x2; 				// Timer 1 reset
+		LPC_TIM1->TCR &= ~(1<<2);			// Timer 1 clear
+		taster_pressed = true;
 	}
-	LPC_SC->EXTPOLAR ^= (1<<0); // POlaritaet aender
-	LPC_SC->EXTINT |= 1<<0; // flag clearen
+	
+	LPC_SC->EXTPOLAR ^= (1<<0); 		// Polaritaet ändern, Stelle 0 = 1 -> rising edge sensitive
+	LPC_SC->EXTINT |= 1<<0; 				// flag clear
 	return;
 }

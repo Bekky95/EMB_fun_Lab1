@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\Lab1_3.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Lab1_3.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Sun Nov 12 16:07:48 2023
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Sat Nov 18 17:18:23 2023
 <BR><P>
 <H3>Maximum Stack Usage =        128 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -198,7 +198,7 @@ Global Symbols
 
 <P><STRONG><a name="[3c]"></a>__rt_entry_main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$0000000D))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16 + Unknown Stack Size
-<LI>Call Chain = __rt_entry_main &rArr; main &rArr; init &rArr; __NVIC_SetPriority
+<LI>Call Chain = __rt_entry_main &rArr; main &rArr; Init &rArr; __NVIC_SetPriority
 </UL>
 <BR>[Calls]<UL><LI><a href="#[3e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;exit
 <LI><a href="#[3d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
@@ -436,9 +436,9 @@ Global Symbols
 <P><STRONG><a name="[20]"></a>EINT0_IRQHandler</STRONG> (Thumb, 142 bytes, Stack size 0 bytes, main.o(i.EINT0_IRQHandler))
 <BR>[Address Reference Count : 1]<UL><LI> startup_lpc17xx.o(RESET)
 </UL>
-<P><STRONG><a name="[4d]"></a>LCD_Send</STRONG> (Thumb, 40 bytes, Stack size 0 bytes, glcd.o(i.LCD_Send))
-<BR><BR>[Called By]<UL><LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteReg
-<LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteIndex
+<P><STRONG><a name="[50]"></a>LCD_Send</STRONG> (Thumb, 40 bytes, Stack size 0 bytes, glcd.o(i.LCD_Send))
+<BR><BR>[Called By]<UL><LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteReg
+<LI><a href="#[4f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteIndex
 </UL>
 
 <P><STRONG><a name="[46]"></a>Display_LED_an</STRONG> (Thumb, 364 bytes, Stack size 16 bytes, funk.o(i.Display_LED_an))
@@ -446,7 +446,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[47]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_DrawLine
 </UL>
-<BR>[Called By]<UL><LI><a href="#[4f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lauflicht
+<BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lauflicht
 </UL>
 
 <P><STRONG><a name="[48]"></a>Display_LED_aus</STRONG> (Thumb, 382 bytes, Stack size 16 bytes, funk.o(i.Display_LED_aus))
@@ -454,60 +454,70 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[47]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_DrawLine
 </UL>
-<BR>[Called By]<UL><LI><a href="#[4f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lauflicht
+<BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lauflicht
+</UL>
+
+<P><STRONG><a name="[49]"></a>Init</STRONG> (Thumb, 156 bytes, Stack size 8 bytes, main.o(i.Init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = Init &rArr; __NVIC_SetPriority
+</UL>
+<BR>[Calls]<UL><LI><a href="#[31]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemInit
+<LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__NVIC_SetPriority
+<LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__NVIC_EnableIRQ
+</UL>
+<BR>[Called By]<UL><LI><a href="#[3d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
 <P><STRONG><a name="[47]"></a>LCD_DrawLine</STRONG> (Thumb, 250 bytes, Stack size 40 bytes, glcd.o(i.LCD_DrawLine))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = LCD_DrawLine &rArr; LCD_SetPoint &rArr; LCD_SetCursor &rArr; LCD_WriteReg &rArr; LCD_WriteIndex
 </UL>
-<BR>[Calls]<UL><LI><a href="#[49]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetPoint
+<BR>[Calls]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetPoint
 </UL>
 <BR>[Called By]<UL><LI><a href="#[48]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Display_LED_aus
 <LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Display_LED_an
 </UL>
 
-<P><STRONG><a name="[49]"></a>LCD_SetPoint</STRONG> (Thumb, 40 bytes, Stack size 16 bytes, glcd.o(i.LCD_SetPoint))
+<P><STRONG><a name="[4c]"></a>LCD_SetPoint</STRONG> (Thumb, 40 bytes, Stack size 16 bytes, glcd.o(i.LCD_SetPoint))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = LCD_SetPoint &rArr; LCD_SetCursor &rArr; LCD_WriteReg &rArr; LCD_WriteIndex
 </UL>
-<BR>[Calls]<UL><LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteReg
-<LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetCursor
+<BR>[Calls]<UL><LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteReg
+<LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetCursor
 </UL>
 <BR>[Called By]<UL><LI><a href="#[47]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_DrawLine
 </UL>
 
-<P><STRONG><a name="[4c]"></a>LCD_WriteIndex</STRONG> (Thumb, 60 bytes, Stack size 8 bytes, glcd.o(i.LCD_WriteIndex))
+<P><STRONG><a name="[4f]"></a>LCD_WriteIndex</STRONG> (Thumb, 60 bytes, Stack size 8 bytes, glcd.o(i.LCD_WriteIndex))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = LCD_WriteIndex
 </UL>
-<BR>[Calls]<UL><LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Send
-<LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wait_delay
+<BR>[Calls]<UL><LI><a href="#[50]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Send
+<LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wait_delay
 </UL>
-<BR>[Called By]<UL><LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteReg
+<BR>[Called By]<UL><LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteReg
 </UL>
 
-<P><STRONG><a name="[4b]"></a>LCD_WriteReg</STRONG> (Thumb, 62 bytes, Stack size 16 bytes, glcd.o(i.LCD_WriteReg))
+<P><STRONG><a name="[4e]"></a>LCD_WriteReg</STRONG> (Thumb, 62 bytes, Stack size 16 bytes, glcd.o(i.LCD_WriteReg))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = LCD_WriteReg &rArr; LCD_WriteIndex
 </UL>
-<BR>[Calls]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteIndex
-<LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Send
-<LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wait_delay
+<BR>[Calls]<UL><LI><a href="#[4f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteIndex
+<LI><a href="#[50]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Send
+<LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wait_delay
 </UL>
-<BR>[Called By]<UL><LI><a href="#[49]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetPoint
-<LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetCursor
-</UL>
-
-<P><STRONG><a name="[50]"></a>LED_an</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, funk.o(i.LED_an))
-<BR><BR>[Called By]<UL><LI><a href="#[4f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lauflicht
+<BR>[Called By]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetPoint
+<LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetCursor
 </UL>
 
-<P><STRONG><a name="[51]"></a>LED_aus</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, funk.o(i.LED_aus))
-<BR><BR>[Called By]<UL><LI><a href="#[4f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lauflicht
+<P><STRONG><a name="[53]"></a>LED_an</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, funk.o(i.LED_an))
+<BR><BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lauflicht
 </UL>
 
-<P><STRONG><a name="[4f]"></a>Lauflicht</STRONG> (Thumb, 112 bytes, Stack size 8 bytes, funk.o(i.Lauflicht))
+<P><STRONG><a name="[54]"></a>LED_aus</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, funk.o(i.LED_aus))
+<BR><BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lauflicht
+</UL>
+
+<P><STRONG><a name="[52]"></a>Lauflicht</STRONG> (Thumb, 112 bytes, Stack size 8 bytes, funk.o(i.Lauflicht))
 <BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = Lauflicht &rArr; Display_LED_aus &rArr; LCD_DrawLine &rArr; LCD_SetPoint &rArr; LCD_SetCursor &rArr; LCD_WriteReg &rArr; LCD_WriteIndex
 </UL>
-<BR>[Calls]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LED_aus
-<LI><a href="#[50]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LED_an
+<BR>[Calls]<UL><LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LED_aus
+<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LED_an
 <LI><a href="#[48]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Display_LED_aus
 <LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Display_LED_an
 </UL>
@@ -515,31 +525,24 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[31]"></a>SystemInit</STRONG> (Thumb, 302 bytes, Stack size 0 bytes, system_lpc17xx.o(i.SystemInit))
+<BR><BR>[Called By]<UL><LI><a href="#[49]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Init
+</UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_lpc17xx.o(.text)
 </UL>
 <P><STRONG><a name="[10]"></a>TIMER1_IRQHandler</STRONG> (Thumb, 14 bytes, Stack size 8 bytes, funk.o(i.TIMER1_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = TIMER1_IRQHandler &rArr; Lauflicht &rArr; Display_LED_aus &rArr; LCD_DrawLine &rArr; LCD_SetPoint &rArr; LCD_SetCursor &rArr; LCD_WriteReg &rArr; LCD_WriteIndex
 </UL>
-<BR>[Calls]<UL><LI><a href="#[4f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lauflicht
+<BR>[Calls]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lauflicht
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_lpc17xx.o(RESET)
 </UL>
 <P><STRONG><a name="[11]"></a>TIMER2_IRQHandler</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, main.o(i.TIMER2_IRQHandler))
 <BR>[Address Reference Count : 1]<UL><LI> startup_lpc17xx.o(RESET)
 </UL>
-<P><STRONG><a name="[52]"></a>init</STRONG> (Thumb, 130 bytes, Stack size 8 bytes, main.o(i.init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = init &rArr; __NVIC_SetPriority
+<P><STRONG><a name="[3d]"></a>main</STRONG> (Thumb, 330 bytes, Stack size 0 bytes, main.o(i.main))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = main &rArr; Init &rArr; __NVIC_SetPriority
 </UL>
-<BR>[Calls]<UL><LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__NVIC_SetPriority
-<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__NVIC_EnableIRQ
-</UL>
-<BR>[Called By]<UL><LI><a href="#[3d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-</UL>
-
-<P><STRONG><a name="[3d]"></a>main</STRONG> (Thumb, 148 bytes, Stack size 0 bytes, main.o(i.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = main &rArr; init &rArr; __NVIC_SetPriority
-</UL>
-<BR>[Calls]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;init
+<BR>[Calls]<UL><LI><a href="#[49]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[3c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry_main
 </UL>
@@ -547,27 +550,27 @@ Global Symbols
 <H3>
 Local Symbols
 </H3>
-<P><STRONG><a name="[4a]"></a>LCD_SetCursor</STRONG> (Thumb, 126 bytes, Stack size 16 bytes, glcd.o(i.LCD_SetCursor))
+<P><STRONG><a name="[4d]"></a>LCD_SetCursor</STRONG> (Thumb, 126 bytes, Stack size 16 bytes, glcd.o(i.LCD_SetCursor))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = LCD_SetCursor &rArr; LCD_WriteReg &rArr; LCD_WriteIndex
 </UL>
-<BR>[Calls]<UL><LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteReg
+<BR>[Calls]<UL><LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteReg
 </UL>
-<BR>[Called By]<UL><LI><a href="#[49]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetPoint
-</UL>
-
-<P><STRONG><a name="[4e]"></a>wait_delay</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, glcd.o(i.wait_delay))
-<BR><BR>[Called By]<UL><LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteReg
-<LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteIndex
+<BR>[Called By]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetPoint
 </UL>
 
-<P><STRONG><a name="[53]"></a>__NVIC_EnableIRQ</STRONG> (Thumb, 34 bytes, Stack size 0 bytes, main.o(i.__NVIC_EnableIRQ))
-<BR><BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;init
+<P><STRONG><a name="[51]"></a>wait_delay</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, glcd.o(i.wait_delay))
+<BR><BR>[Called By]<UL><LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteReg
+<LI><a href="#[4f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteIndex
 </UL>
 
-<P><STRONG><a name="[54]"></a>__NVIC_SetPriority</STRONG> (Thumb, 32 bytes, Stack size 8 bytes, main.o(i.__NVIC_SetPriority))
+<P><STRONG><a name="[4a]"></a>__NVIC_EnableIRQ</STRONG> (Thumb, 34 bytes, Stack size 0 bytes, main.o(i.__NVIC_EnableIRQ))
+<BR><BR>[Called By]<UL><LI><a href="#[49]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Init
+</UL>
+
+<P><STRONG><a name="[4b]"></a>__NVIC_SetPriority</STRONG> (Thumb, 32 bytes, Stack size 8 bytes, main.o(i.__NVIC_SetPriority))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = __NVIC_SetPriority
 </UL>
-<BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;init
+<BR>[Called By]<UL><LI><a href="#[49]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Init
 </UL>
 <P>
 <H3>
