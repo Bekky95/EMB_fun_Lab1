@@ -1,6 +1,5 @@
 --cpu Cortex-M3
 ".\objects\asciilib.o"
-".\objects\funk.o"
 ".\objects\glcd.o"
 ".\objects\main.o"
 ".\objects\touch.o"

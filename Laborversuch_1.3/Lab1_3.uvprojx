@@ -389,11 +389,6 @@
               <FilePath>.\AsciiLib.c</FilePath>
             </File>
             <File>
-              <FileName>funk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\funk.c</FilePath>
-            </File>
-            <File>
               <FileName>GLCD.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\GLCD.c</FilePath>
