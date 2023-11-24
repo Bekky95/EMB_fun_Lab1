@@ -1,0 +1,12 @@
+--cpu Cortex-M3
+".\objects\asciilib.o"
+".\objects\main.o"
+".\objects\touch.o"
+".\objects\extint_timemeasure_debounce.o"
+".\objects\glcd_lpc1700.o"
+".\objects\startup_lpc17xx.o"
+".\objects\system_lpc17xx.o"
+--strict --scatter ".\Objects\Labor1.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\Labor1.map" -o .\Objects\Labor1.4
