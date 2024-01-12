@@ -1,2 +1,3 @@
 # EMB_fun_Lab1
-Spaß spaß spaß
+Labore aus EMB WS23 
+Sollten vollständig sein, keine Garantie :D 
