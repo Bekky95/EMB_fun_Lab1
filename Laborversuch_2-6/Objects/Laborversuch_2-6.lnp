@@ -1,0 +1,13 @@
+--cpu Cortex-M3
+".\objects\uart_api.o"
+".\objects\uart_getchar.o"
+".\objects\uart_init.o"
+".\objects\uart_main.o"
+".\objects\uart_putchar.o"
+".\objects\glcd_lpc1700.o"
+".\objects\startup_lpc17xx.o"
+".\objects\system_lpc17xx.o"
+--strict --scatter ".\Objects\Laborversuch_2-6.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\Laborversuch_2-6.map" -o .\Objects\Laborversuch_2-6.axf
